@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Reviews</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom font for a modern look */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8"
+  >
+    <!-- Header Section -->
+    <header class="w-full max-w-6xl text-center mb-10">
+      <a
+        href="/customerReviews"
+        class="absolute top-4 left-4 sm:top-6 sm:left-6"
+      >
+        <button
+          class="bg-blue-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+        >
+          My Reviews
+        </button>
+      </a>
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-blue-400 mb-4">
+        Customer Reviews
+      </h1>
+      <p class="text-lg sm:text-xl text-gray-300">
+        Hear what our amazing customers have to say!
+      </p>
+      <% if(token) { %>
+      <a href="/logout" class="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <button
+          class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
+        >
+          Logout
+        </button>
+      </a>
+      <% } %>
+    </header>
+
+    <!-- Reviews Grid Section -->
+    <section class="w-full max-w-6xl">
+      <h2 class="text-3xl font-bold text-gray-100 mb-6 text-center">
+        What People Are Saying
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <% if(reviewsShow.length > 0) { %>
+        <!-- Review Card 1 -->
+        <% reviewsShow.forEach(review => { %>
+
+        <div
+          class="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700 hover:border-blue-500 transition-all duration-300"
+        >
+          <div class="flex items-center mb-4">
+            <img
+              src="<%= review.customerID.profileImage %>"
+              alt="Reviewer Avatar"
+              class="w-12 h-12 rounded-full mr-4 border-2 border-blue-400"
+            />
+            <div>
+              <p class="font-semibold text-blue-300 text-lg">
+                <%= review.customerID.firstName %> <%=
+                review.customerID.lastName %>
+              </p>
+              <div class="flex text-yellow-400">
+                <!-- Star Icons -->
+                <!-- Filled Stars -->
+                <% for (let i = 0; i < review.reviewRating; i++) { %> &#9733; <%
+                } %>
+                <!-- Empty Stars -->
+                <% for (let i = 0; i < 5 - review.reviewRating; i++) { %>
+                &#9734; <% } %>
+              </div>
+            </div>
+          </div>
+          <!-- Customer Submitted Image -->
+          <img
+            src="<%= review.reviewImage %>"
+            alt="Customer submitted image"
+            class="w-[300px] h-[300px] object-cover rounded-lg mb-4"
+          />
+          <div><h2 class="text-xl"><%= review.reviewTitle %></h2></div>
+          <p class="text-gray-200 mb-4 leading-relaxed">
+            "<%= review.reviewDesc %>"
+          </p>
+          <p class="text-sm text-gray-400">
+            Reviewed on:
+            <span class="font-medium text-gray-300"
+              ><%= review.date.getDate().toString().padStart(2, '0') %>-<%=
+              (review.date.getMonth()+1).toString().padStart(2, '0') %>-<%=
+              review.date.getFullYear() %></span
+            >
+          </p>
+        </div>
+        <% }) %> <% } else { %>
+        <h2>No reviews</h2>
+        <% } %>
+        <!-- Review Card 2 -->
+      </div>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900 text-gray-100 min-h-screen p-8">
+    <header class="text-center mb-12">
+      <div><%= adminDisplay.firstName %> <%= adminDisplay.lastName %></div>
+      <button
+        class="flex items-center space-x-2 text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+          />
+        </svg>
+        <a href="/logout" rel="noopener noreferrer"
+          ><span class="font-medium">Logout</span></a
+        >
+      </button>
+      <div class="absolute right-0 group mt-2 mr-5">
+        <button
+          class="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <img
+            src="<%= adminDisplay.profileImage %>"
+            alt="dp"
+            class="w-12 h-12 rounded-full border-2 border-blue-400"
+          />
+        </button>
+
+        <div
+          class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-2 z-10 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 ease-in-out"
+        >
+          <a
+            href="/customerlist"
+            class="block text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Manage Customer</a
+          >
+
+          <a
+            href="/adminReviews"
+            class="block text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Manage Customer Reviews</a
+          >
+
+          <a
+            href="#"
+            class="block text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Edit Details</a
+          >
+          <a
+            href="#"
+            class="block text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Reset Password</a
+          >
+          <% if(adminDisplay.role === "superAdmin") { %>
+          <a
+            href="/adminReg"
+            class="block text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Add New Admin</a
+          >
+
+          <a
+            href="/adminList"
+            class="block text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Admin List</a
+          >
+          <% } %>
+        </div>
+      </div>
+      <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">Customer List</h1>
+      </div>
+    </header>
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+        <table class="w-full text-left">
+          <thead class="bg-gray-700 text-gray-200 uppercase text-sm">
+            <tr>
+              <th scope="col" class="px-6 py-3">Photo</th>
+              <th scope="col" class="px-6 py-3">User</th>
+              <th scope="col" class="px-6 py-3">Role</th>
+              <th scope="col" class="px-6 py-3 text-right">Date</th>
+              <th scope="col" class="px-6 py-3 text-center">Action</th>
+            </tr>
+          </thead>
+          <% if(customerDisplay.length > 0) { %>
+          <tbody class="divide-y divide-gray-700">
+            <% customerDisplay.forEach(customer => { %>
+
+            <tr class="hover:bg-gray-700 transition-colors duration-200">
+              <% if(customer.role !== 'admin' && customer.role !== 'superAdmin')
+              { %>
+              <td
+                class="text-lg font-semibold flex justify-center items-center pt-4"
+              >
+                <img
+                  src="<%= customer.profileImage %>"
+                  alt="dp"
+                  class="w-12 h-12 rounded-full border-2 border-blue-400"
+                />
+              </td>
+
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-lg font-semibold">
+                  <%= customer.firstName %> <%= customer.lastName %>
+                </div>
+                <div class="text-sm text-gray-400"><%= customer.email %></div>
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-400"
+              >
+                <%= customer.role %>
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-400"
+              >
+                <%= new Date(customer.createdAt).toLocaleDateString('en-GB') %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex items-center justify-center space-x-2">
+                  <a
+                    href="/customerEdit/<%= customer._id %>"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-1 px-3 rounded-md transition-colors duration-200"
+                  >
+                    Edit
+                  </a>
+                  <a
+                    href="/customerList/delete/<%= customer._id %>"
+                    class="bg-red-600 hover:bg-red-700 text-white font-medium py-1 px-3 rounded-md transition-colors duration-200"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </td>
+              <% } %>
+            </tr>
+            <% }) %>
+          </tbody>
+          <% } else { %>
+          <h1>No customer</h1>
+          <% } %>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

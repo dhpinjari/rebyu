@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom scrollbar for a more refined look */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #1f2937;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #4b5563;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #6b7280;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 font-sans p-6">
+    <header class="flex justify-between items-center mb-10">
+      <button
+        class="flex items-center space-x-2 text-gray-400 hover:text-red-500 transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+          />
+        </svg>
+        <a href="/logout" rel="noopener noreferrer"
+          ><span class="font-medium">Logout</span></a
+        >
+      </button>
+      <span class="text-white font-medium"
+        ><%= customerDetails.firstName %> <%= customerDetails.lastName %></span
+      >
+      <div class="relative group">
+        <button
+          class="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <img
+            src="<%= customerDetails.profileImage %>"
+            alt="dp"
+            class="w-12 h-12 rounded-full border-2 border-blue-400"
+          />
+        </button>
+
+        <div
+          class="absolute right-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg py-2 z-10 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-200 ease-in-out"
+        >
+          <a
+            href="/reviewsubmit"
+            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Submit Your Review</a
+          >
+
+          <a
+            href="/reviews"
+            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >All Reviews</a
+          >
+
+          <a
+            href="/customerreviews/customerEditbyCustomer"
+            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Edit Details</a
+          >
+          <a
+            href="/customerreviews/customerSelfPasswordReset"
+            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Reset Password</a
+          >
+          <% if(customerDetails.role === 'admin' || customerDetails.role ===
+          'superAdmin' ){ %>
+          <a
+            href="/customerlist"
+            class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+            >Admin Panel</a
+          >
+          <% } %>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- new Reviews Grid -->
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"
+      >
+        <% if(showCustomerReviews.length >0) {%>
+        <!-- Review Card -->
+        <% showCustomerReviews.forEach(customerReview => { %>
+
+        <div class="max-w-7xl mx-auto">
+          <div
+            class="bg-gray-800 rounded-2xl shadow-lg p-6 flex flex-col justify-between transition-transform transform hover:scale-105"
+          >
+            <div>
+              <!-- Reviewer Info & Image -->
+              <div class="flex items-center mt-2 mb-4">
+                <img
+                  src="<%= customerReview.reviewImage %>"
+                  alt="Customer submitted image"
+                  class="max-w-[20%]"
+                />
+              </div>
+
+              <!-- Review Content -->
+              <h3 class="text-2xl font-bold text-blue-400 mb-2">
+                "<%= customerReview.reviewTitle %>"
+              </h3>
+              <p class="text-gray-300 leading-relaxed mb-3">
+                <%= customerReview.reviewDesc %>
+              </p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between space-x-3">
+              <div>
+                <span class="text-yellow-400 text-2xl"
+                  ><!-- Star Icons -->
+                  <!-- Filled Stars -->
+                  <% for (let i = 0; i < customerReview.reviewRating; i++) { %>
+                  &#9733; <% } %>
+                  <!-- Empty Stars -->
+                  <% for (let i = 0; i < 5 - customerReview.reviewRating; i++) {
+                  %> &#9734; <% } %></span
+                >
+                <p class="text-sm text-gray-400">
+                  <%= customerReview.date.getDate().toString().padStart(2, '0')
+                  %>-<%=
+                  (customerReview.date.getMonth()+1).toString().padStart(2, '0')
+                  %>-<%= customerReview.date.getFullYear() %>
+                </p>
+              </div>
+              <div>
+                <button
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                >
+                  <a
+                    href="/customerReviews/customerSelfReviewEdit/<%= customerReview._id %>"
+                  >
+                    Edit</a
+                  >
+                </button>
+                <button
+                  class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                >
+                  <a
+                    href="/customerReviews/customerSelfReviewDelete/<%= customerReview._id %>"
+                  >
+                    Delete</a
+                  >
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+        <!-- Review Card ends-->
+        <% } else { %>
+        <h1>You haven’t submitted any reviews yet.</h1>
+
+        <% } %>
+      </div>
+      <!-- new Reviews Grid end -->
+    </main>
+  </body>
+</html>

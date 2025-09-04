@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dark Login</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom font for a clean, modern look */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
+    <!-- Main container for the login form -->
+    <div
+      class="bg-gray-800 w-full max-w-md p-8 rounded-xl shadow-2xl space-y-6"
+    >
+      <!-- Login form header -->
+      <div class="text-center">
+        <h1 class="text-3xl font-bold text-gray-100">Welcome Back</h1>
+        <p class="text-gray-400 mt-2">Log in to your account</p>
+      </div>
+
+      <!-- The login form itself -->
+      <form id="loginForm" class="space-y-4" method="post" action="/login">
+        <!-- Email/Username Input Group -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-300"
+            >Email Address</label
+          >
+          <div class="mt-1">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-colors"
+            />
+          </div>
+        </div>
+
+        <!-- Password Input Group -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-300"
+            >Password</label
+          >
+          <div class="mt-1">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              required
+              class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent transition-colors"
+            />
+          </div>
+        </div>
+
+        <!-- Forgot password link -->
+        <div class="flex items-center justify-between">
+          <a
+            href="#"
+            class="text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+          >
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-4">
+          <button
+            type="submit"
+            class="w-full px-4 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all transform hover:scale-105"
+          >
+            Sign in
+          </button>
+        </div>
+      </form>
+
+      <!-- Optional: Sign up link for new users -->
+      <div class="text-center text-sm text-gray-400">
+        Don't have an account?
+        <a
+          href="/customerReg"
+          class="font-medium text-purple-400 hover:text-purple-300 transition-colors"
+          >Sign up</a
+        >
+      </div>
+    </div>
+  </body>
+</html>
