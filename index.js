@@ -5,7 +5,6 @@ const db = require("./config/mongooseConnections");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 
-//check git comment
 const reviewSubmitRoute = require("./routes/reviewSubmitRoute");
 const reviewsShowRoute = require("./routes/reviewsShowRoute");
 const customerReviewsRoute = require("./routes/customerReviewsRoute");
