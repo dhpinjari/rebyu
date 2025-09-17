@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --color-primary: #111827;
+        --color-secondary: #1f2937;
+        --color-accent: #fbd38d;
+        --color-text-primary: #e5e7eb;
+        --color-text-secondary: #9ca3af;
+        --color-green-btn: #10b981;
+        --color-green-btn-hover: #059669;
+        --color-red-btn: #ef4444;
+        --color-red-btn-hover: #dc2626;
+        --color-blue-ring: #3b82f6;
+      }
+
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--color-secondary);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #4b5563;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #6b7280;
+      }
+
+      /* Star rating styling */
+      .star-rating input[type="radio"] {
+        display: none;
+      }
+      .star-rating label {
+        font-size: 2.5rem;
+        color: var(--color-text-secondary);
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+      }
+      .star-rating label:hover,
+      .star-rating label:hover ~ label,
+      .star-rating input[type="radio"]:checked ~ label {
+        color: var(--color-accent);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 font-sans p-6">
+    <main class="container mx-auto max-w-xl">
+      <h1 class="text-4xl font-bold mb-8 text-center text-white">
+        Edit Your Review
+      </h1>
+
+      <form
+        action="/customerReviews/customerSelfReviewEdit/<%= customerSelfReviewEdit._id %>"
+        method="POST"
+        class="bg-gray-800 rounded-lg p-8 shadow-lg border border-gray-700"
+      >
+        <div class="mb-6">
+          <label
+            for="reviewRating"
+            class="block text-gray-400 text-sm font-semibold mb-2"
+          >
+            Rating
+          </label>
+          <div class="flex flex-row-reverse justify-end star-rating">
+            <input type="radio" id="star5" name="reviewRating" value="5" <%=
+            customerSelfReviewEdit.reviewRating == 5 ? "checked" : "" %> />
+            <label for="star5" title="5 stars">&#9733;</label>
+
+            <input type="radio" id="star4" name="reviewRating" value="4" <%=
+            customerSelfReviewEdit.reviewRating == 4 ? "checked" : "" %> />
+            <label for="star4" title="4 stars">&#9733;</label>
+
+            <input type="radio" id="star3" name="reviewRating" value="3" <%=
+            customerSelfReviewEdit.reviewRating == 3 ? "checked" : "" %> />
+            <label for="star3" title="3 stars">&#9733;</label>
+
+            <input type="radio" id="star2" name="reviewRating" value="2" <%=
+            customerSelfReviewEdit.reviewRating == 2 ? "checked" : "" %> />
+            <label for="star2" title="2 stars">&#9733;</label>
+
+            <input type="radio" id="star1" name="reviewRating" value="1" <%=
+            customerSelfReviewEdit.reviewRating == 1 ? "checked" : "" %> />
+            <label for="star1" title="1 star">&#9733;</label>
+          </div>
+        </div>
+
+        <div class="mb-6">
+          <label
+            for="reviewTitle"
+            class="block text-gray-400 font-semibold mb-2"
+          >
+            Review Title
+          </label>
+          <input
+            type="text"
+            id="reviewTitle"
+            name="reviewTitle"
+            value="<%= customerSelfReviewEdit.reviewTitle %>"
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <div class="mb-6">
+          <label
+            for="reviewDesc"
+            class="block text-gray-400 font-semibold mb-2"
+          >
+            Review Description
+          </label>
+          <textarea
+            id="reviewDesc"
+            name="reviewDesc"
+            rows="4"
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+<%= customerSelfReviewEdit.reviewDesc %></textarea
+          >
+        </div>
+
+        <div class="mb-6">
+          <label
+            for="reviewImage"
+            class="block text-gray-400 font-semibold mb-2"
+          >
+            Image URL
+          </label>
+          <input
+            type="url"
+            id="reviewImage"
+            name="reviewImage"
+            value="<%= customerSelfReviewEdit.reviewImage %>"
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div class="flex space-x-4 mt-8 justify-end">
+          <button
+            type="submit"
+            class="flex items-center justify-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Update
+          </button>
+          <a
+            href="/customerReviews"
+            class="flex items-center justify-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

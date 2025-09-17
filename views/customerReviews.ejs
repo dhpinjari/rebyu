@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Reviews</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #111827;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #4b5563;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #6b7280;
+      }
+      .review-card {
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      }
+      .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      .animated-underline {
+        position: relative;
+        display: inline-block;
+      }
+      .animated-underline::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 2px;
+        background-color: #3b82f6;
+        transition: width 0.3s ease-in-out;
+      }
+      .animated-underline:hover::after {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-950 text-gray-200 antialiased p-6 sm:p-12 min-h-screen flex flex-col"
+  >
+    <div class="max-w-7xl mx-auto w-full">
+      <header
+        class="flex flex-col sm:flex-row justify-between items-center mb-16 relative"
+      >
+        <div class="text-center sm:text-left mb-6 sm:mb-0">
+          <h1
+            class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-2"
+          >
+            Your Reviews ✍️
+          </h1>
+          <p class="text-lg text-gray-400">
+            View, edit, or delete the reviews you have submitted.
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="hidden sm:block text-right">
+            <div class="text-lg font-semibold text-white">
+              <%= customerDetails.firstName %> <%= customerDetails.lastName %>
+            </div>
+            <a
+              href="/logout"
+              class="flex items-center justify-end space-x-1 text-gray-500 hover:text-red-500 transition-colors mt-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span class="text-sm font-medium">Logout</span>
+            </a>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="relative block p-1 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            >
+              <img
+                src="<%= customerDetails.profileImage %>"
+                alt="Profile picture"
+                class="w-16 h-16 rounded-full border-4 border-blue-400 object-cover"
+              />
+              <span
+                class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-white"
+              ></span>
+            </button>
+
+            <div
+              class="absolute right-0 top-full mt-4 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl py-3 z-20 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300 ease-in-out transform scale-95 group-hover:scale-100"
+            >
+              <div
+                class="px-4 py-2 text-sm text-gray-400 border-b border-gray-700 mb-2"
+              >
+                Signed in as Customer
+              </div>
+              <a
+                href="/reviewsubmit"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-plus-circle mr-2"></i> Submit New Review
+              </a>
+              <a
+                href="/reviews"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-comment-dots mr-2"></i> All Reviews
+              </a>
+              <a
+                href="/customerreviews/customerEditbyCustomer"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-user-edit mr-2"></i> Edit Details
+              </a>
+              <a
+                href="/customerreviews/customerSelfPasswordReset"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-key mr-2"></i> Reset Password
+              </a>
+              <% if(customerDetails.role === 'admin' || customerDetails.role ===
+              'superAdmin' ){ %>
+              <a
+                href="/customerlist"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-user-shield mr-2"></i> Admin Panel
+              </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-grow">
+        <% if(showCustomerReviews.length > 0) { %>
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+        >
+          <% showCustomerReviews.forEach(customerReview => { %>
+          <article
+            class="review-card bg-gray-800 rounded-xl shadow-lg p-6 flex flex-col h-full border border-gray-700"
+          >
+            <% if(customerReview.reviewImage) { %>
+            <div class="mb-4">
+              <img
+                src="<%= customerReview.reviewImage %>"
+                alt="Review image"
+                class="w-full h-48 object-cover rounded-lg border-2 border-gray-700 shadow-md"
+              />
+            </div>
+            <% } %>
+
+            <div class="flex-grow">
+              <div class="flex items-center mb-2">
+                <div aria-label="Rating" class="flex text-yellow-400 text-xl">
+                  <% for(let i = 0; i < customerReview.reviewRating; i++) { %>
+                  <span aria-hidden="true">&#9733;</span>
+                  <% } %> <% for(let i = 0; i < 5 - customerReview.reviewRating;
+                  i++) { %>
+                  <span aria-hidden="true" class="text-gray-500">&#9733;</span>
+                  <% } %>
+                </div>
+              </div>
+              <h3 class="text-xl font-bold text-white mb-2 leading-tight">
+                "<%= customerReview.reviewTitle %>"
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                <%= customerReview.reviewDesc %>
+              </p>
+            </div>
+
+            <div class="mt-auto pt-4 border-t border-gray-700">
+              <div class="flex justify-between items-center">
+                <time class="block text-xs text-gray-500">
+                  <%= customerReview.date.getDate().toString().padStart(2, '0')
+                  %>-<%=
+                  (customerReview.date.getMonth()+1).toString().padStart(2, '0')
+                  %>-<%= customerReview.date.getFullYear() %>
+                </time>
+                <div class="flex space-x-2">
+                  <a
+                    href="/customerReviews/customerSelfReviewEdit/<%= customerReview._id %>"
+                    class="bg-blue-600 hover:bg-blue-700 rounded-md px-4 py-2 text-sm font-semibold text-white transition-colors duration-200"
+                  >
+                    Edit
+                  </a>
+                  <a
+                    href="/customerReviews/customerSelfReviewDelete/<%= customerReview._id %>"
+                    onclick="return confirm('Are you sure you want to delete this review? This cannot be undone.');"
+                    class="bg-red-600 hover:bg-red-700 rounded-md px-4 py-2 text-sm font-semibold text-white transition-colors duration-200"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </div>
+            </div>
+          </article>
+          <% }) %>
+        </div>
+        <% } else { %>
+        <div class="text-center py-20">
+          <h2 class="text-2xl font-semibold text-gray-500">
+            You haven’t submitted any reviews yet. 😥
+          </h2>
+          <a
+            href="/reviewsubmit"
+            class="mt-6 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+          >
+            Submit Your First Review
+          </a>
+        </div>
+        <% } %>
+      </main>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

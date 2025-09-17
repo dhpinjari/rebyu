@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom scrollbar for a more refined look */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: #1f2937;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #4b5563;
+        border-radius: 4px;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #6b7280;
+      }
+    </style>
+    <style>
+      /* Custom styles for the star rating */
+      .star-rating input[type="radio"] {
+        display: none;
+      }
+      .star-rating label {
+        font-size: 2rem; /* Larger stars */
+        color: #4a5568; /* Default star color (gray-600 equivalent) */
+        cursor: pointer;
+        transition: color 0.2s ease-in-out;
+      }
+      .star-rating label:hover,
+      .star-rating label:hover ~ label,
+      .star-rating input[type="radio"]:checked ~ label {
+        color: #fbd38d; /* Yellow-300 equivalent for active/hover */
+      }
+      /* Ensure Inter font is used */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-900 text-gray-100 font-sans p-6">
+    <main class="max-w-xl mx-auto">
+      <h1 class="text-4xl font-bold mb-8 text-center text-white">
+        Edit Your Review
+      </h1>
+
+      <!-- Edit Review Form -->
+      <form
+        class="bg-gray-800 rounded-lg p-8 shadow-lg border border-gray-700"
+        method="POST"
+        action="/adminReviews/adminEditReview/<%= adminReviewEdit._id %>"
+      >
+        <!-- Customer Profile -->
+        <div class="mb-6 flex justify-center">
+          <img
+            src="<%= adminReviewEdit.customerID.profileImage %>"
+            alt="dp"
+            class="rounded-[108px] w-[15%]"
+          />
+        </div>
+        <!-- Customer name -->
+
+        <div class="mb-6">
+          <label for="reviewerName" class="block text-gray-400 font-medium mb-2"
+            >Reviewer Name</label
+          >
+          <h1
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <%= adminReviewEdit.customerID.firstName %> <%=
+            adminReviewEdit.customerID.lastName %>
+          </h1>
+        </div>
+        <!-- Review Rating Field -->
+        <div class="mb-6">
+          <label
+            for="reviewRating"
+            class="block text-gray-300 text-sm font-medium mb-2"
+            >Rating</label
+          >
+          <div class="flex flex-row-reverse justify-end star-rating">
+            <input type="radio" id="star5" name="reviewRating" value="5"
+            class="hidden" <%= adminReviewEdit.reviewRating == 5 ? "checked" :
+            "" %> disabled />
+            <label for="star5" title="5 stars">&#9733;</label>
+            <input type="radio" id="star4" name="reviewRating" value="4"
+            class="hidden" <%= adminReviewEdit.reviewRating == 4 ? "checked" :
+            "" %> disabled />
+            <label for="star4" title="4 stars">&#9733;</label>
+            <input type="radio" id="star3" name="reviewRating" value="3"
+            class="hidden" <%= adminReviewEdit.reviewRating == 3 ? "checked" :
+            "" %> disabled />
+            <label for="star3" title="3 stars">&#9733;</label>
+            <input type="radio" id="star2" name="reviewRating" value="2"
+            class="hidden" <%= adminReviewEdit.reviewRating == 2 ? "checked" :
+            "" %> disabled />
+            <label for="star2" title="2 stars">&#9733;</label>
+            <input type="radio" id="star1" name="reviewRating" value="1"
+            class="hidden" <%= adminReviewEdit.reviewRating == 1 ? "checked" :
+            "" %> disabled />
+            <label for="star1" title="1 star">&#9733;</label>
+          </div>
+        </div>
+        <!-- Review Title Field -->
+        <div class="mb-6">
+          <label for="reviewTitle" class="block text-gray-400 font-medium mb-2"
+            >Review Title</label
+          >
+          <input
+            type="text"
+            id="reviewTitle"
+            name="reviewTitle"
+            value="<%= adminReviewEdit.reviewTitle %>"
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <!-- Review Description Field -->
+        <div class="mb-6">
+          <label for="reviewDesc" class="block text-gray-400 font-medium mb-2"
+            >Review Description</label
+          >
+          <textarea
+            id="reviewDesc"
+            name="reviewDesc"
+            rows="4"
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+<%= adminReviewEdit.reviewDesc %></textarea
+          >
+        </div>
+
+        <!-- Review Image Field -->
+        <div class="mb-6">
+          <label for="reviewImage" class="block text-gray-400 font-medium mb-2"
+            >Image URL</label
+          >
+          <input
+            type="url"
+            id="reviewImage"
+            name="reviewImage"
+            value="<%= adminReviewEdit.reviewImage %>"
+            class="w-full p-3 bg-gray-700 text-gray-100 rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex space-x-4 mt-8 justify-end">
+          <button
+            type="submit"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Update
+          </button>
+          <a
+            href="/adminReviews"
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-red-500"
+          >
+            Cancel
+          </a>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

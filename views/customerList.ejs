@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customer List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .animated-underline {
+        position: relative;
+        display: inline-block;
+      }
+      .animated-underline::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 2px;
+        background-color: #3b82f6;
+        transition: width 0.3s ease-in-out;
+      }
+      .animated-underline:hover::after {
+        width: 100%;
+      }
+      /* New classes for dropdown visibility */
+      .dropdown-menu {
+        opacity: 0;
+        visibility: hidden;
+        transform: scale(0.95);
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out,
+          visibility 0.3s ease-in-out;
+      }
+      .dropdown-menu.active {
+        opacity: 1;
+        visibility: visible;
+        transform: scale(1);
+      }
+    </style>
+  </head>
+  <body class="bg-gray-950 text-gray-200 min-h-screen p-6 sm:p-12 antialiased">
+    <div class="max-w-7xl mx-auto py-12">
+      <header
+        class="flex flex-col sm:flex-row justify-between items-center mb-16 relative"
+      >
+        <div class="text-center sm:text-left mb-6 sm:mb-0">
+          <h1
+            class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-2"
+          >
+            Customer Management 👥
+          </h1>
+          <p class="text-lg text-gray-400">
+            View, edit, and manage all customer accounts.
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="hidden sm:block text-right">
+            <div class="text-lg font-semibold text-white">
+              <%= adminDisplay.firstName %> <%= adminDisplay.lastName %>
+            </div>
+            <a
+              href="/logout"
+              class="flex items-center justify-end space-x-1 text-gray-500 hover:text-red-500 transition-colors mt-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span class="text-sm font-medium">Logout</span>
+            </a>
+          </div>
+
+          <div class="relative z-50">
+            <button
+              id="profile-menu-button"
+              class="relative block p-1 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            >
+              <img
+                src="<%= adminDisplay.profileImage %>"
+                alt="Admin Profile"
+                class="w-16 h-16 rounded-full border-4 border-blue-400"
+              />
+              <span
+                class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-white"
+              ></span>
+            </button>
+
+            <div
+              id="profile-menu"
+              class="dropdown-menu absolute right-0 top-full mt-4 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl py-3"
+            >
+              <div
+                class="px-4 py-2 text-sm text-gray-400 border-b border-gray-700 mb-2"
+              >
+                Signed in as Admin
+              </div>
+              <a
+                href="/customerlist"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-users mr-2"></i> Manage Customers
+              </a>
+              <a
+                href="/adminReviews"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-comment-dots mr-2"></i> Manage Reviews
+              </a>
+              <a
+                href="/adminSelfEdit/<%= adminDisplay._id %>"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-user-edit mr-2"></i> Admin Edit Details
+              </a>
+              <a
+                href="/adminSelfEdit/adminSelfPasswordReset/<%= adminDisplay._id %>"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-key mr-2"></i> Admin Reset Password
+              </a>
+              <% if(adminDisplay.role === "superAdmin") { %>
+              <a
+                href="/adminReg"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-user-plus mr-2"></i> Add New Admin
+              </a>
+              <a
+                href="/adminList"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-user-shield mr-2"></i> Admin List
+              </a>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div
+        class="bg-gray-800 shadow-2xl rounded-xl overflow-hidden border border-gray-700"
+      >
+        <table class="w-full text-left table-auto">
+          <thead class="bg-gray-700 text-gray-300 uppercase text-xs">
+            <tr>
+              <th scope="col" class="px-6 py-4">User</th>
+              <th scope="col" class="px-6 py-4 hidden sm:table-cell">Email</th>
+              <th scope="col" class="px-6 py-4 hidden md:table-cell">Role</th>
+              <th scope="col" class="px-6 py-4 hidden lg:table-cell">Joined</th>
+              <th scope="col" class="px-6 py-4 text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-700">
+            <% if(customerDisplay.length > 0) { %> <%
+            customerDisplay.forEach(customer => { %> <% if(customer.role !==
+            'admin' && customer.role !== 'superAdmin') { %>
+            <tr class="hover:bg-gray-700 transition-colors duration-200">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <img
+                    src="<%= customer.profileImage %>"
+                    alt="Customer Profile"
+                    class="w-12 h-12 rounded-full border-2 border-blue-400 object-cover mr-4"
+                  />
+                  <div>
+                    <div class="text-base font-semibold text-white">
+                      <%= customer.firstName %> <%= customer.lastName %>
+                    </div>
+                    <div class="text-sm text-gray-400 sm:hidden">
+                      <%= customer.email %>
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
+                <div class="text-sm text-gray-300"><%= customer.email %></div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <span
+                  class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800 capitalize"
+                >
+                  <%= customer.role %>
+                </span>
+              </td>
+              <td
+                class="px-6 py-4 whitespace-nowrap text-sm text-gray-400 hidden lg:table-cell"
+              >
+                <%= new Date(customer.createdAt).toLocaleDateString('en-GB') %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <div class="flex items-center justify-center space-x-3">
+                  <a
+                    href="/customerEdit/<%= customer._id %>"
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md shadow-sm transition-transform transform hover:scale-105"
+                    title="Edit Customer"
+                  >
+                    <i class="fas fa-edit"></i>
+                    <span class="hidden sm:inline"> Edit</span>
+                  </a>
+                  <a
+                    href="/customerList/delete/<%= customer._id %>"
+                    class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md shadow-sm transition-transform transform hover:scale-105"
+                    onclick="return confirm('Are you sure you want to delete <%= customer.firstName %> <%= customer.lastName %> and all their associated reviews? This action cannot be undone.');"
+                    title="Delete Customer"
+                  >
+                    <i class="fas fa-trash-alt"></i>
+                    <span class="hidden sm:inline"> Delete</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            <% } %> <% }) %> <% } else { %>
+            <tr>
+              <td colspan="5" class="text-center py-10 text-gray-500">
+                <h2 class="text-xl font-semibold">No customers found. 😥</h2>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const profileButton = document.getElementById("profile-menu-button");
+      const profileMenu = document.getElementById("profile-menu");
+      const userProfileContainer = document.querySelector(".relative.z-50");
+
+      profileButton.addEventListener("click", () => {
+        profileMenu.classList.toggle("active");
+      });
+
+      // Close the dropdown if the user clicks outside of it
+      document.addEventListener("click", (event) => {
+        if (!userProfileContainer.contains(event.target)) {
+          profileMenu.classList.remove("active");
+        }
+      });
+    </script>
+  </body>
+</html>

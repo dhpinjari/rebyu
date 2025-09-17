@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Reviews Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .review-card {
+        transform: translateY(0);
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+      }
+      .review-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      }
+      .animated-underline {
+        position: relative;
+        display: inline-block;
+      }
+      .animated-underline::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 2px;
+        background-color: #3b82f6;
+        transition: width 0.3s ease-in-out;
+      }
+      .animated-underline:hover::after {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-950 text-gray-200 min-h-screen p-6 sm:p-12 antialiased">
+    <div class="max-w-7xl mx-auto py-12">
+      <header
+        class="flex flex-col sm:flex-row justify-between items-center mb-16 relative"
+      >
+        <div class="text-center sm:text-left mb-6 sm:mb-0">
+          <h1
+            class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-2"
+          >
+            Customer Reviews 📝
+          </h1>
+          <p class="text-lg text-gray-400">
+            Manage and moderate all customer feedback in one place.
+          </p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="hidden sm:block text-right">
+            <div class="text-lg font-semibold text-white">
+              <%= currentAdmin.firstName %> <%= currentAdmin.lastName %>
+            </div>
+            <a
+              href="/logout"
+              class="flex items-center justify-end space-x-1 text-gray-500 hover:text-red-500 transition-colors mt-1"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              <span class="text-sm font-medium">Logout</span>
+            </a>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="relative block p-1 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors focus:outline-none focus:ring-4 focus:ring-blue-500/50"
+            >
+              <img
+                src="<%= currentAdmin.profileImage %>"
+                alt="Admin Profile"
+                class="w-16 h-16 rounded-full border-4 border-blue-400"
+              />
+              <span
+                class="absolute bottom-0 right-0 block h-4 w-4 rounded-full bg-green-500 ring-2 ring-white"
+              ></span>
+            </button>
+
+            <div
+              class="absolute right-0 top-full mt-4 w-56 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl py-3 z-20 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity duration-300 ease-in-out transform scale-95 group-hover:scale-100"
+            >
+              <div
+                class="px-4 py-2 text-sm text-gray-400 border-b border-gray-700 mb-2"
+              >
+                Signed in as Admin
+              </div>
+              <a
+                href="/customerlist"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-users mr-2"></i> Manage Customers
+              </a>
+              <a
+                href="/adminReviews"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-comment-dots mr-2"></i> Manage Reviews
+              </a>
+              <a
+                href="/adminSelfEdit/<%= currentAdmin._id %>"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-user-edit mr-2"></i> Admin Edit Details
+              </a>
+              <a
+                href="/adminSelfEdit/adminSelfPasswordReset/<%= currentAdmin._id %>"
+                class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors animated-underline"
+              >
+                <i class="fas fa-key mr-2"></i> Admin Reset Password
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="mb-10">
+        <input
+          type="text"
+          placeholder="Search reviews by name, email, or title..."
+          class="w-full p-4 rounded-full bg-gray-800 text-gray-200 placeholder-gray-500 shadow-inner focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-300"
+        />
+      </div>
+
+      <% if(showAdminReviews.length > 0) { %>
+      <div class="space-y-8">
+        <% showAdminReviews.forEach(review => { %>
+        <div
+          class="review-card bg-gray-800 rounded-3xl shadow-lg p-8 flex flex-col lg:flex-row lg:items-center justify-between transition-all duration-300"
+        >
+          <div class="flex-1 mb-6 lg:mb-0">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center">
+                <img
+                  src="<%= review.customerID.profileImage %>"
+                  alt="Reviewer Avatar"
+                  class="w-16 h-16 rounded-full mr-4 object-cover border-4 border-gray-700 shadow-md"
+                />
+                <div>
+                  <h2 class="text-xl font-bold text-white leading-tight">
+                    <%= review.customerID.firstName %> <%=
+                    review.customerID.lastName %>
+                  </h2>
+                  <span class="text-sm text-gray-400 font-mono"
+                    ><%= review.customerID.email %></span
+                  >
+                </div>
+              </div>
+              <p class="text-sm text-gray-400 font-mono">
+                <%= review.date.getDate().toString().padStart(2, '0') %>-<%=
+                (review.date.getMonth()+1).toString().padStart(2, '0') %>-<%=
+                review.date.getFullYear() %>
+              </p>
+            </div>
+
+            <div class="flex items-center mb-4">
+              <div class="flex text-yellow-400 text-2xl pr-4">
+                <% for (let i = 0; i < review.reviewRating; i++) { %> ⭐ <% } %>
+                <% for (let i = 0; i < 5 - review.reviewRating; i++) { %> ☆ <% }
+                %>
+              </div>
+              <h3 class="text-2xl font-bold text-blue-400">
+                "<%= review.reviewTitle %>"
+              </h3>
+            </div>
+
+            <p class="text-gray-300 leading-relaxed mb-4 lg:pr-12">
+              <%= review.reviewDesc %>
+            </p>
+
+            <% if(review.reviewImage){ %>
+            <div class="mt-4">
+              <img
+                src="<%= review.reviewImage %>"
+                alt="Customer submitted image"
+                class="w-32 h-32 object-cover rounded-lg border-2 border-gray-700 shadow-md"
+              />
+            </div>
+            <% } %>
+          </div>
+
+          <div
+            class="flex-shrink-0 flex justify-start lg:justify-end space-x-4 mt-6 lg:mt-0"
+          >
+            <button
+              class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+            >
+              <a href="/adminReviews/adminEditReview/<%= review._id %>">
+                Edit</a
+              >
+            </button>
+            <button
+              class="bg-red-600 hover:bg-red-700 text-white font-semibold py-3 px-6 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+            >
+              <a
+                href="/adminReviews/adminDeleteReview/<%= review._id %>"
+                onclick="return confirm('Are you sure you want to delete the review submitted by <%= review.customerID.firstName %> <%= review.customerID.lastName %>?');"
+              >
+                Delete</a
+              >
+            </button>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+
+      <% } else { %>
+      <div class="text-center py-20">
+        <h2 class="text-2xl font-semibold text-gray-500">
+          No customer submitted reviews yet. 😴
+        </h2>
+      </div>
+      <% } %>
+    </div>
+
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Product Reviews</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Custom font for modern, clean look */
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8"
+  >
+    <!-- Header Section -->
+    <header class="w-full max-w-6xl relative mb-12 text-center">
+      <a
+        href="/customerReviews"
+        class="absolute top-4 left-4 sm:top-6 sm:left-6"
+      >
+        <button
+          class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+          aria-label="My Reviews"
+        >
+          My Reviews
+        </button>
+      </a>
+
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-blue-400 mb-3">
+        Customer Reviews
+      </h1>
+      <p class="text-lg sm:text-xl text-gray-300 max-w-xl mx-auto">
+        Hear what our amazing customers have to say!
+      </p>
+
+      <% if(token) { %>
+      <a href="/logout" class="absolute top-4 right-4 sm:top-6 sm:right-6">
+        <button
+          class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-5 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105"
+          aria-label="Logout"
+        >
+          Logout
+        </button>
+      </a>
+      <% } %>
+    </header>
+
+    <!-- Reviews Grid Section -->
+    <section class="w-full max-w-6xl">
+      <h2 class="text-3xl font-semibold text-gray-100 mb-8 text-center">
+        What People Are Saying
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <% if(reviewsShow.length > 0) { %> <% reviewsShow.forEach(review => { %>
+        <article
+          class="bg-gray-800 p-6 rounded-2xl shadow-md border border-gray-700 hover:border-blue-500 transition-colors duration-300 flex flex-col"
+          aria-label="Customer review by <%= review.customerID.firstName %> <%= review.customerID.lastName %>"
+        >
+          <header class="flex items-center mb-5">
+            <img
+              src="<%= review.customerID.profileImage %>"
+              alt="Avatar of <%= review.customerID.firstName %>"
+              class="w-12 h-12 rounded-full border-2 border-blue-400 mr-4 object-cover"
+            />
+            <div>
+              <p class="font-semibold text-blue-300 text-lg leading-none">
+                <%= review.customerID.firstName %> <%=
+                review.customerID.lastName %>
+              </p>
+              <div
+                class="flex text-yellow-400 mt-1"
+                aria-label="Rating: <%= review.reviewRating %> out of 5 stars"
+              >
+                <% for (let i = 0; i < review.reviewRating; i++) { %>
+                <span aria-hidden="true">&#9733;</span>
+                <% } %> <% for (let i = 0; i < 5 - review.reviewRating; i++) {
+                %>
+                <span aria-hidden="true" class="text-gray-600">&#9733;</span>
+                <% } %>
+              </div>
+            </div>
+          </header>
+
+          <% if(review.reviewImage){ %>
+          <img
+            src="<%= review.reviewImage %>"
+            alt="Image submitted by <%= review.customerID.firstName %>"
+            class="w-full h-64 object-cover rounded-lg mb-5"
+            loading="lazy"
+          />
+          <% } %>
+
+          <h3 class="text-xl font-semibold text-gray-100 mb-2 truncate">
+            "<%= review.reviewTitle %>"
+          </h3>
+          <p class="text-gray-300 leading-relaxed mb-6 flex-grow">
+            <%= review.reviewDesc %>
+          </p>
+
+          <footer class="text-sm text-gray-400">
+            Reviewed on:
+            <time
+              class="font-medium text-gray-300"
+              datetime="<%= review.date.toISOString() %>"
+            >
+              <%= review.date.getDate().toString().padStart(2, '0') %>- <%=
+              (review.date.getMonth() + 1).toString().padStart(2, '0') %>- <%=
+              review.date.getFullYear() %>
+            </time>
+          </footer>
+        </article>
+        <% }) %> <% } else { %>
+        <p class="text-center text-gray-500 text-lg">No reviews available.</p>
+        <% } %>
+      </div>
+    </section>
+  </body>
+</html>
